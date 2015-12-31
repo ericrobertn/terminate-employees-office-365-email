@@ -3,8 +3,8 @@
 
 Import-Module 'Microsoft.PowerShell.Security'
 
-$username = 's1lending_it@s1lending.com'
-$password = cat "\\dc01-vdc1\SYSVOL\syn1net.com\scripts\securestring.txt" | convertto-securestring
+$username = '[enter your office365 username]'
+$password = cat "Path to Secure String" | convertto-securestring
 $credential = new-object -typename System.Management.Automation.PSCredential `
          -argumentlist $username, $password
 
