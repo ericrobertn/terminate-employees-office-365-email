@@ -1,19 +1,22 @@
 # terminate-employees-office-365-email
 #This Powershell script will change a users office 365 password, disable owa and active sync, forward their emails, and hide them from the GAL
 
+
 Import-Module 'Microsoft.PowerShell.Security'
 
-$username = '[enter your office365 username]'
-$password = cat "Path to Secure String" | convertto-securestring
-$credential = new-object -typename System.Management.Automation.PSCredential `
-         -argumentlist $username, $password
+#Accesses AES.key to un-encrypt password.txt and create a credential variable to log into office 365
+$User = "s1lending_it@s1lending.com"
+$PasswordFile = "C:\Users\eric\Desktop\Terminate Employee\Password.txt"
+$KeyFile = "C:\Users\eric\Desktop\Terminate Employee\AES.key"
+$key = Get-Content $KeyFile
+$credential = New-Object -TypeName System.Management.Automation.PSCredential `
+ -ArgumentList $User, (Get-Content $PasswordFile | ConvertTo-SecureString -Key $key)
 
 
 #Creates an Exchange Online session
 $ExchangeSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell -Credential $credential -Authentication Basic -AllowRedirection 
 
 #Import session commands
-Import-Module MSOnline
 Import-PSSession $ExchangeSession 
 Connect-MsolService -Credential $credential
 
